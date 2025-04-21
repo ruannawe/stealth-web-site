@@ -74,22 +74,24 @@
             transition: color 0.3s ease;
         }
 
-        /* Make download button less prominent by default in nav */
-        .nav-links .download-btn-nav {
+        /* Make buy button less prominent by default in nav */
+        /* Using buy-btn-nav class added previously */
+        .nav-links .buy-btn-nav {
             background: none;
             border: 1px solid var(--accent);
             padding: 8px 16px;
             /* Slightly smaller padding */
         }
 
-        .nav-links .download-btn-nav:hover {
+        .nav-links .buy-btn-nav:hover {
             background-color: var(--accent);
             color: var(--bg);
             transform: none;
             /* Remove hover transform */
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover:not(.buy-btn-nav) {
+            /* Exclude button from text hover */
             color: var(--accent);
         }
 
@@ -214,6 +216,7 @@
         /* Features Section */
         .features {
             padding: 80px 0;
+            background-color: var(--bg);
         }
 
         .section-title {
@@ -223,45 +226,72 @@
             color: var(--text);
         }
 
+        /* Grid for feature cards */
         .features-grid {
             display: grid;
-            /* Adjust grid for potentially 4 items */
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr;
             gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Feature Card Styling */
         .feature-card {
             background-color: var(--card-bg);
-            padding: 30px;
             border-radius: 8px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
             transition: transform 0.3s ease;
-            display: flex;
-            /* Added for better vertical alignment if needed */
-            flex-direction: column;
-            /* Added */
         }
-
-        .feature-card p {
-            flex-grow: 1;
-            /* Allow paragraph to take space */
-        }
-
 
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
 
         .feature-icon {
-            font-size: 40px;
-            color: var(--accent);
+            font-size: 36px;
             margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .feature-card h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
             color: var(--text);
+        }
+
+        .feature-text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-card p {
+            color: rgba(233, 233, 233, 0.7);
+            font-size: 15px;
+            line-height: 1.5;
         }
 
         /* How It Works Section */
@@ -273,34 +303,27 @@
         .steps {
             display: flex;
             flex-wrap: wrap;
-            /* Updated for potentially 4 steps */
             justify-content: space-around;
             max-width: 1100px;
-            /* Wider to accommodate 4 steps */
             margin: 0 auto;
         }
 
         .step {
-            /* Adjust flex-basis for 4 items */
             flex-basis: 45%;
-            /* Two items per row on medium screens */
             text-align: center;
             padding: 20px;
             min-width: 240px;
-            /* Slightly smaller min-width */
             margin-bottom: 40px;
-            /* Add margin for stacking */
         }
 
-        /* Target 4 items layout more specifically if needed */
         @media (min-width: 992px) {
+
+            /* This specific media query for steps remains */
             .step {
                 flex-basis: 22%;
-                /* Aim for 4 across on large screens */
                 margin-bottom: 0;
             }
         }
-
 
         .step-number {
             display: flex;
@@ -363,15 +386,6 @@
         }
 
         /* Responsive */
-        @media (max-width: 991px) {
-
-            /* Adjust breakpoint for 2x2 steps */
-            .step {
-                flex-basis: 45%;
-                /* Ensure two steps per row */
-            }
-        }
-
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 36px;
@@ -379,11 +393,6 @@
 
             .hero p {
                 font-size: 18px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                /* Stack features */
             }
 
             .steps {
@@ -398,7 +407,9 @@
                 margin-bottom: 40px;
             }
 
-            .step:last-child {
+            /* Ensure last step margin is removed correctly */
+            .step:last-of-type {
+                /* Use last-of-type for better targeting */
                 margin-bottom: 0;
             }
 
@@ -439,17 +450,21 @@
                 padding: 10px;
             }
 
-            .nav-links .download-btn-nav {
+            /* Style buy button prominently in mobile menu */
+            .nav-links .buy-btn-nav {
                 margin: 15px auto 0;
                 display: inline-block;
                 width: auto;
                 background: var(--accent);
+                /* Make it look like primary button */
                 color: var(--bg);
                 border: none;
+                /* Remove border */
                 padding: 12px 24px;
+                /* Restore prominent padding */
             }
 
-            .nav-links .download-btn-nav:hover {
+            .nav-links .buy-btn-nav:hover {
                 background-color: var(--secondary);
                 transform: translateY(-2px);
             }
@@ -524,15 +539,16 @@
         <div class="nav-links" id="main-nav">
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
-            <a href="#download" class="btn btn-primary download-btn-nav">Download</a>
+            <a href="https://buy.stripe.com/bIY3d33Re09P2hq9AE" class="btn buy-btn-nav">Get Now</a>
         </div>
     </nav>
 
     <section class="hero container">
         <h1>Your Undetectable AI Interview Assistant</h1>
-        <p>Stealth Web is the macOS browser invisible to screen sharing. Use your favorite AI assistant during technical
-            interviews for LeetCode answers, system design diagrams, or a quick second opinion.</p>
-        <a href="#download" class="btn btn-primary">Download for macOS</a>
+        <p>Stealth Web is the optimized browser invisible to screen sharing on Mac & Windows. Use your favorite AI
+            assistant during technical interviews for LeetCode answers, system design diagrams, or a quick second
+            opinion.</p>
+        <a href="https://buy.stripe.com/bIY3d33Re09P2hq9AE" class="btn btn-primary">Get Stealth Web Now</a>
         <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
 
         <div class="ghost-container">
@@ -548,29 +564,50 @@
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🕵️</div>
-                <h3>100% Undetectable</h3>
-                <p>Completely invisible during screen sharing on Zoom, Google Meet, Microsoft Teams, and more.</p>
+                <div class="feature-text-content">
+                    <h3 class="feature-title">100% Undetectable</h3>
+                    <p>Runs completely hidden from screen sharing tools like Zoom, Google Meet, and Microsoft Teams.</p>
+                </div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">💡</div>
-                <h3>AI Interview Assistant</h3>
-                <p>Get instant help from any AI (like ChatGPT, Claude, Gemini) for coding challenges, system design, or
-                    technical questions.</p>
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text-content">
+                    <h3 class="feature-title">Side-by-Side Mode</h3>
+                    <p>Works as a popup alongside LeetCode, Excalidraw, Code Share, and other interview platforms.</p>
+                </div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📸</div>
-                <h3>Silent Screenshot Workflow</h3>
-                <p>Take silent screenshots of interview questions or diagrams with <span class="kbd">Cmd+Shift+P</span>
-                    and paste (<span class="kbd">Cmd+V</span>) directly into your AI chat.</p>
+                <div class="feature-icon">🧠</div>
+                <div class="feature-text-content">
+                    <h3 class="feature-title">AI-Powered Assistant</h3>
+                    <p>Get instant help with coding problems, system design, and technical questions during interviews.
+                    </p>
+                </div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🪶</div>
-                <h3>Lightweight & Versatile</h3>
-                <p>Runs efficiently using less than 40MB of memory. Open any website securely alongside your chosen AI.
-                </p>
+                <div class="feature-icon">🔒</div>
+                <div class="feature-text-content">
+                    <h3 class="feature-title">Privacy Protected</h3>
+                    <p>Your browsing remains completely anonymous and secure at all times.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <div class="feature-text-content">
+                    <h3 class="feature-title">MacOS Optimized</h3>
+                    <p>Built specifically for MacOS with native performance and reliability.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-text-content">
+                    <h3 class="feature-title">Fast & Lightweight</h3>
+                    <p>Minimal resource usage ensures your interview platforms run smoothly.</p>
+                </div>
             </div>
         </div>
     </section>
+
 
     <section id="how-it-works" class="how-it-works">
         <div class="container">
@@ -579,7 +616,7 @@
                 <div class="step">
                     <div class="step-number">1</div>
                     <h3>Install & Launch</h3>
-                    <p>Download and install Stealth Web for macOS. Open it before your interview starts.</p>
+                    <p>Download and install Stealth Web for Mac or Windows. Open it before your interview starts.</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
@@ -594,20 +631,19 @@
                 <div class="step">
                     <div class="step-number">4</div>
                     <h3>Screenshot & Ask</h3>
-                    <p>Use <span class="kbd">Cmd+Shift+P</span> to silently capture interview content, then <span
-                            class="kbd">Cmd+V</span> to paste and ask your AI for help.</p>
+                    <p>Use <span class="kbd">Cmd+Shift+P</span> (Mac) or equivalent to silently capture content, then
+                        paste and ask your AI for help.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="download" class="cta">
-        <div class="container">
-            <h2>Get Your Unfair Advantage Today</h2>
-            <p>Download Stealth Web and never go into a technical interview unprepared again.</p>
-            <a href="#" style="margin-top: 20px;" class="btn btn-primary">Download for macOS</a>
-            <p style="margin-top: 20px; font-size: 14px;">Requires macOS 10.15 or later. Runs under 40MB RAM.</p>
-        </div>
+    <section id="buy-now" class="cta">
+        <h2>Get Your Unfair Advantage Today</h2>
+        <p>Stop worrying about tricky interview questions. Get instant, undetectable AI help with Stealth Web.</p>
+        <a href="https://buy.stripe.com/bIY3d33Re09P2hq9AE" style="margin-top: 20px;" class="btn btn-primary">Get
+            Stealth Web Now</a>
+        <p style="margin-top: 20px; font-size: 14px;">Available for macOS and Windows.</p>
     </section>
 
     <footer class="footer">
@@ -629,13 +665,13 @@
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 // Only close if the menu is currently active/open
-                if (navLinks.classList.contains('active')) {
+                // And check if the link is NOT the buy button (allow external navigation)
+                if (!link.classList.contains('buy-btn-nav') && navLinks.classList.contains('active')) {
                     navLinks.classList.remove('active');
                     navToggle.classList.remove('active');
                 }
             });
         });
-
     </script>
 </body>
 
