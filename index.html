@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stealth Web - Your Invisible Interview Assistant</title>
+    <style>
+        /* Pococss approach - small, focused utility classes */
+        :root {
+            --primary: #2a2a35;
+            --secondary: #6c63ff;
+            --accent: #00c896;
+            --text: #e9e9e9;
+            --bg: #1a1a24;
+            --card-bg: #2a2a35;
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+            /* Needed for absolute positioning of mobile menu */
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text);
+            /* Default margin, if any, for large screens */
+            margin-left: 0;
+            /* Explicitly set default */
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            /* Default display for nav links on large screens */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            margin-left: 20px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        /* Make download button less prominent by default in nav */
+        .nav-links .download-btn-nav {
+            background: none;
+            border: 1px solid var(--accent);
+            padding: 8px 16px;
+            /* Slightly smaller padding */
+        }
+
+        .nav-links .download-btn-nav:hover {
+            background-color: var(--accent);
+            color: var(--bg);
+            transform: none;
+            /* Remove hover transform */
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Hamburger Menu Button - Hidden by default on larger screens */
+        /* IMPORTANT: This rule MUST be outside the media query */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+            /* Ensure it's above mobile menu */
+            /* Default margin, if any, for large screens */
+            margin-right: 0;
+            /* Explicitly set default */
+        }
+
+        .hamburger {
+            display: block;
+            position: relative;
+            width: 25px;
+            height: 3px;
+            background: var(--text);
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--text);
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger::before {
+            top: -8px;
+        }
+
+        .hamburger::after {
+            bottom: -8px;
+        }
+
+        /* Styles for the active hamburger (X shape) */
+        .nav-toggle.active .hamburger {
+            background: transparent;
+            /* Middle bar disappears */
+        }
+
+        .nav-toggle.active .hamburger::before {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+
+        .nav-toggle.active .hamburger::after {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 0 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 650px;
+            /* Slightly wider for new text */
+            margin: 0 auto 30px;
+            color: var(--text);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg);
+            border: none;
+            /* Ensure primary button has no border */
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 2px solid var(--accent);
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent);
+            color: var(--bg);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: var(--text);
+        }
+
+        .features-grid {
+            display: grid;
+            /* Adjust grid for potentially 4 items */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            display: flex;
+            /* Added for better vertical alignment if needed */
+            flex-direction: column;
+            /* Added */
+        }
+
+        .feature-card p {
+            flex-grow: 1;
+            /* Allow paragraph to take space */
+        }
+
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 0;
+            background-color: var(--primary);
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            /* Updated for potentially 4 steps */
+            justify-content: space-around;
+            max-width: 1100px;
+            /* Wider to accommodate 4 steps */
+            margin: 0 auto;
+        }
+
+        .step {
+            /* Adjust flex-basis for 4 items */
+            flex-basis: 45%;
+            /* Two items per row on medium screens */
+            text-align: center;
+            padding: 20px;
+            min-width: 240px;
+            /* Slightly smaller min-width */
+            margin-bottom: 40px;
+            /* Add margin for stacking */
+        }
+
+        /* Target 4 items layout more specifically if needed */
+        @media (min-width: 992px) {
+            .step {
+                flex-basis: 22%;
+                /* Aim for 4 across on large screens */
+                margin-bottom: 0;
+            }
+        }
+
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: var(--bg);
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        /* Style for keyboard commands */
+        .kbd {
+            background-color: var(--bg);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            border: 1px solid var(--accent);
+            font-size: 0.9em;
+        }
+
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary), var(--bg));
+        }
+
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        /* Ghost Browser Image */
+        .browser-img {
+            max-width: 80%;
+            margin: 40px auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+
+            /* Adjust breakpoint for 2x2 steps */
+            .step {
+                flex-basis: 45%;
+                /* Ensure two steps per row */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                /* Stack features */
+            }
+
+            .steps {
+                justify-content: center;
+                /* Center steps when they stack */
+            }
+
+            .step {
+                flex-basis: 80%;
+                /* Stack steps */
+                max-width: 400px;
+                margin-bottom: 40px;
+            }
+
+            .step:last-child {
+                margin-bottom: 0;
+            }
+
+            .cta h2 {
+                font-size: 30px;
+            }
+
+            /* --- Responsive Navbar --- */
+            .logo {
+                margin-left: 15px;
+            }
+
+            .nav-toggle {
+                display: block;
+                margin-right: 15px;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary);
+                flex-direction: column;
+                padding: 20px 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                margin: 10px 0;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .nav-links .download-btn-nav {
+                margin: 15px auto 0;
+                display: inline-block;
+                width: auto;
+                background: var(--accent);
+                color: var(--bg);
+                border: none;
+                padding: 12px 24px;
+            }
+
+            .nav-links .download-btn-nav:hover {
+                background-color: var(--secondary);
+                transform: translateY(-2px);
+            }
+        }
+
+        /* Ghost animation */
+        .ghost-container {
+            position: relative;
+            height: 64px;
+            margin: 50px auto;
+            min-height: 100px;
+        }
+
+        .ghost {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background-color: var(--text);
+            border-radius: 50% 50% 0 0;
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.8;
+            left: 50%;
+        }
+
+        .ghost::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--bg);
+            border-radius: 50%;
+            top: 25px;
+            left: 15px;
+            box-shadow: 30px 0 0 var(--bg);
+        }
+
+        .ghost::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: radial-gradient(circle at 10px -10px, transparent 15px, var(--text) 15px),
+                radial-gradient(circle at 30px -10px, transparent 15px, var(--text) 15px),
+                radial-gradient(circle at 50px -10px, transparent 15px, var(--text) 15px);
+            background-size: 20px 20px;
+        }
+
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(-50%);
+            }
+
+            50% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar container">
+        <div class="logo">Stealth<span>Web</span></div>
+        <button class="nav-toggle" aria-label="toggle navigation">
+            <span class="hamburger"></span>
+        </button>
+        <div class="nav-links" id="main-nav">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#download" class="btn btn-primary download-btn-nav">Download</a>
+        </div>
+    </nav>
+
+    <section class="hero container">
+        <h1>Your Undetectable AI Interview Assistant</h1>
+        <p>Stealth Web is the macOS browser invisible to screen sharing. Use your favorite AI assistant during technical
+            interviews for LeetCode answers, system design diagrams, or a quick second opinion.</p>
+        <a href="#download" class="btn btn-primary">Download for macOS</a>
+        <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+
+        <div class="ghost-container">
+            <div class="ghost"></div>
+        </div>
+
+        <img src="./20250420_0205_MacOS Coding Environment_remix_01js8s9gapekmbtk97behz7kbg.png"
+            alt="Stealth Web Browser Interface" class="browser-img" />
+    </section>
+
+    <section id="features" class="features container">
+        <h2 class="section-title">Why Choose Stealth Web?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🕵️</div>
+                <h3>100% Undetectable</h3>
+                <p>Completely invisible during screen sharing on Zoom, Google Meet, Microsoft Teams, and more.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3>AI Interview Assistant</h3>
+                <p>Get instant help from any AI (like ChatGPT, Claude, Gemini) for coding challenges, system design, or
+                    technical questions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📸</div>
+                <h3>Silent Screenshot Workflow</h3>
+                <p>Take silent screenshots of interview questions or diagrams with <span class="kbd">Cmd+Shift+P</span>
+                    and paste (<span class="kbd">Cmd+V</span>) directly into your AI chat.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🪶</div>
+                <h3>Lightweight & Versatile</h3>
+                <p>Runs efficiently using less than 40MB of memory. Open any website securely alongside your chosen AI.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">Get Started in Seconds</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install & Launch</h3>
+                    <p>Download and install Stealth Web for macOS. Open it before your interview starts.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Share Your Screen</h3>
+                    <p>Begin your interview and share your screen confidently – Stealth Web won't appear.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Open Your AI</h3>
+                    <p>Navigate to your preferred AI website (ChatGPT, Claude, etc.) within Stealth Web.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Screenshot & Ask</h3>
+                    <p>Use <span class="kbd">Cmd+Shift+P</span> to silently capture interview content, then <span
+                            class="kbd">Cmd+V</span> to paste and ask your AI for help.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="cta">
+        <div class="container">
+            <h2>Get Your Unfair Advantage Today</h2>
+            <p>Download Stealth Web and never go into a technical interview unprepared again.</p>
+            <a href="#" style="margin-top: 20px;" class="btn btn-primary">Download for macOS</a>
+            <p style="margin-top: 20px; font-size: 14px;">Requires macOS 10.15 or later. Runs under 40MB RAM.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Stealth Web. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('#main-nav');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            navToggle.classList.toggle('active'); // Add active class to button for X animation
+        });
+
+        // Optional: Close mobile menu when a link is clicked
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if the menu is currently active/open
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    navToggle.classList.remove('active');
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
